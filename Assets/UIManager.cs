@@ -15,14 +15,20 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-        endGamePanel.SetActive(false);
+        if (endGamePanel != null)
+        {
+            endGamePanel.SetActive(false);
+        }
     }
 
     void Update()
     {
         if (!GameController.gameOver)
         {
-            currentTimeText.text = "Tempo: " + Mathf.CeilToInt(GameController.TimeLeft) + "s";
+            if (currentTimeText != null)
+            {
+                currentTimeText.text = "Tempo: " + Mathf.CeilToInt(GameController.TimeLeft) + "s";
+            }
         }
 
         if (!panelShown && GameController.gameOver)
@@ -44,17 +50,34 @@ public class UIManager : MonoBehaviour
                 }
             }
 
-            endGamePanel.SetActive(true);
+            if (endGamePanel != null)
+            {
+                endGamePanel.SetActive(true);
+            }
 
             if (GameController.playerWon)
             {
-                titleText.text = "VOCE VENCEU!";
-                audioSource.PlayOneShot(winSound);
+                if (titleText != null)
+                {
+                    titleText.text = "VOCE VENCEU!";
+                }
+
+                if (audioSource != null && winSound != null)
+                {
+                    audioSource.PlayOneShot(winSound);
+                }
             }
             else
             {
-                titleText.text = "GAME OVER";
-                audioSource.PlayOneShot(loseSound);
+                if (titleText != null)
+                {
+                    titleText.text = "GAME OVER";
+                }
+
+                if (audioSource != null && loseSound != null)
+                {
+                    audioSource.PlayOneShot(loseSound);
+                }
             }
         }
     }
