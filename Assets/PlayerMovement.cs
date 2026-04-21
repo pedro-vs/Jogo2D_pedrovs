@@ -1,34 +1,49 @@
 using UnityEngine;
 
-public class PlayerMoviment : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
     private Rigidbody2D rb;
-    AudioSource audio;
-    public float speed;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private AudioSource audioSource;
+
+    public float speed = 5f;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        audio = GetComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
+    void Update()
+    {
+        GameController.Tick(Time.deltaTime);
+    }
+
     void FixedUpdate()
-    { 
+    {
+        if (GameController.gameOver)
+        {
+            rb.linearVelocity = Vector2.zero;
+            return;
+        }
+
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
 
         Vector2 movement = new Vector2(moveHorizontal, moveVertical);
-
         rb.MovePosition(rb.position + movement.normalized * speed * Time.fixedDeltaTime);
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Coletavel"){
-            audio.Play();
+        if (other.CompareTag("Coletavel"))
+        {
+            if (audioSource != null && audioSource.clip != null)
+            {
+                audioSource.Play();
+            }
+
             GameController.Collect();
             Destroy(other.gameObject);
-        };
+        }
     }
 }
